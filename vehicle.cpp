@@ -8,17 +8,23 @@
 
 // helper functions
 enum string_code {
+    CS,             // Cold start
     KL,             // keep lane
     LCL,            // lane change left
-    LCR,
-    eBetty,
-    ...
+    LCR,            // lane change right
+    PLCL,           // Prepare lane change left
+    PLCR            // Prepare lane change right
 };
 
 string_code hashit (std::string const& inString) {
-    if (inString == "CS") return eFred;
-    if (inString == "Barney") return eBarney;
-    ...
+
+    if (inString == "CS") return CS;
+    if (inString == "KL") return KL;
+    if (inString == "LCL") return LCL;
+    if (inString == "LCR") return LCR;
+    if (inString == "PLCL") return PLCL;
+    if (inString == "PLCR") return PLCR;
+    return CS;
 }
 
 
@@ -78,10 +84,31 @@ void Vehicle::update_state(map<int,vector < vector<int> > > predictions) {
     state = "KL"; // this is an example of how you change state.
 
     // state machine
-//    if state ==
-//    {
-//        case ''
-//    }
+    switch (hashit(state))
+    {
+        case CS:
+
+            state = "KL"; // change state
+            break;
+        case KL:
+            state = "KL"; // change state
+            break;
+        case PLCL:
+            state = "KL"; // change state
+            break;
+        case LCL:
+            state = "KL"; // change state
+            break;
+        case PLCR:
+            state = "KL"; // change state
+            break;
+        case LCR:
+            state = "KL"; // change state
+            break;
+        default:
+            state = "CS"; // change state
+            break;
+    }
 
 }
 
