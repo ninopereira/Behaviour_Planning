@@ -5,7 +5,7 @@ function CostFunction()
     GOAL = [300.0 2] % goal distance and lane
     goal_lane = GOAL(2)
     goal_dist = GOAL(1)
-    max_vel = 50
+    max_speed = 50
     lane_0 = 0
     lane_1 = 1
     lane_2 = 2
@@ -19,7 +19,7 @@ function CostFunction()
     % cost function depends on speed, distance to goal, distance to target
     % cost = 1 - exp(-delta_d/delta_s)
     
-    current_vel = max_vel;
+    current_vel = max_speed;
     
     % function that penalises wrong lanes
     Klane = 0.5
@@ -31,19 +31,19 @@ function CostFunction()
     
     % function that penalises low speeds
     Kvel = 1
-    cost_lane_0_vmax = cost_lane_0 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
-    cost_lane_1_vmax = cost_lane_1 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
-    cost_lane_2_vmax = cost_lane_2 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
+    cost_lane_0_vmax = cost_lane_0 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
+    cost_lane_1_vmax = cost_lane_1 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
+    cost_lane_2_vmax = cost_lane_2 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
     
-    current_vel = max_vel/2
-    cost_lane_0_vmed = cost_lane_0 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
-    cost_lane_1_vmed = cost_lane_1 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
-    cost_lane_2_vmed = cost_lane_2 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
+    current_vel = max_speed/2
+    cost_lane_0_vmed = cost_lane_0 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
+    cost_lane_1_vmed = cost_lane_1 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
+    cost_lane_2_vmed = cost_lane_2 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
     
     current_vel = 0.001
-    cost_lane_0_vmin = cost_lane_0 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
-    cost_lane_1_vmin = cost_lane_1 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
-    cost_lane_2_vmin = cost_lane_2 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_vel-current_vel)/max_vel))
+    cost_lane_0_vmin = cost_lane_0 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
+    cost_lane_1_vmin = cost_lane_1 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
+    cost_lane_2_vmin = cost_lane_2 + 1-1./(1+Kvel*(goal_dist-delta_s)/goal_dist.*((max_speed-current_vel)/max_speed))
     
     %normalise costs
     cost_lane_0_vmax = cost_lane_0_vmax/2
