@@ -1,10 +1,13 @@
 #include <iostream>
 #include "vehicle.h"
-#include <iostream>
+#include <string>
 #include <math.h>
 #include <map>
 #include <string>
 #include <iterator>
+#include <iostream>     // std::cout
+#include <algorithm>    // std::find
+#include <vector>       // std::vector
 
 // helper functions
 enum string_code {
@@ -44,7 +47,7 @@ Vehicle::Vehicle(int lane, int s, int v, int a) {
 
 Vehicle::~Vehicle() {}
 
-
+// calculate cost of being in a line
 
 // TODO - Implement this method.
 void Vehicle::update_state(map<int,vector < vector<int> > > predictions) {
@@ -81,13 +84,14 @@ void Vehicle::update_state(map<int,vector < vector<int> > > predictions) {
     }
 
     */
-    state = "KL"; // this is an example of how you change state.
-
+	
+	
+	
+	
     // state machine
     switch (hashit(state))
     {
         case CS:
-
             state = "KL"; // change state
             break;
         case KL:
@@ -109,8 +113,84 @@ void Vehicle::update_state(map<int,vector < vector<int> > > predictions) {
             state = "CS"; // change state
             break;
     }
-
+	
+	state = get_next_state(predictions);
 }
+
+std::string Vehicle::get_next_state(map<int,vector < vector<int> > > predictions)
+{
+	vector<std::string> states = {"KL", "LCL", "LCR"};
+    if  (lane == 0)
+	{
+		std::string search_str= "LCL";
+		std::vector<std::string>::iterator result = std::find(states.begin(), states.end(), search_str);
+        if (result!= states.end())
+		{states.erase(result);}
+    }
+	if (lane == (lanes_available -1))
+    {
+		std::string search_str= "LCR";
+		std::vector<std::string>::iterator result = std::find(states.begin(), states.end(), search_str);
+		if (result!= states.end())
+		{states.erase(result);}
+	}
+
+    vector<std::pair<std::string,double>> costs;
+    for (auto state:states)
+	{
+//      predictions_copy = deepcopy(predictions);
+//      trajectory = trajectory_for_state(state,predictions_copy);
+//      double cost = calculate_cost(trajectory, predictions);
+      double cost = 0.5;
+	  costs.push_back({state, cost});
+	}
+												 
+	 // gets the strategy (plan) with minimum cost
+	auto it = min_element(costs.begin(), costs.end(),
+			  [](decltype(costs)::value_type& l, decltype(costs)::value_type& r) -> bool { return l.second < r.second; });
+	return (*it).first;
+}
+
+	
+//  def _trajectory_for_state(self,state,predictions, horizon=5):
+//    # remember current state
+//    snapshot = self.snapshot()
+//    
+//    
+//    # pretend to be in new proposed state
+//    self.state = state
+//    trajectory = [snapshot]
+//    # pdb.set_trace()
+//    for i in range(horizon):
+//      self.restore_state_from_snapshot(snapshot)
+//      self.state = state
+//      self.realize_state(predictions)
+//      assert 0 <= self.lane < self.lanes_available, "{}".format(self.lane)
+//      self.increment()
+//      trajectory.append(self.snapshot())
+//
+//      # need to remove first prediction for each vehicle.
+//      # pdb.set_trace()
+//      for v_id, v in predictions.items():
+//        v.pop(0)
+//
+//    # restore state from snapshot
+//    self.restore_state_from_snapshot(snapshot)
+//    return trajectory
+//
+//
+//
+//  def snapshot(self):
+//    return Snapshot(self.lane, self.s, self.v, self.a, self.state)
+//
+//  def restore_state_from_snapshot(self, snapshot):
+//    s = snapshot
+//    self.lane = s.lane
+//    self.s = s.s
+//    self.v = s.v
+//    self.a = s.a
+//    self.state = s.state
+//	
 
 void Vehicle::configure(vector<int> road_data) {
 	/*

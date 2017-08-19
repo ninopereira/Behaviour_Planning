@@ -83,6 +83,10 @@ public:
   void realize_prep_lane_change(map<int,vector< vector<int> > > predictions, string direction);
 
   vector<vector<int> > generate_predictions(int horizon);
+  
+  bool compare(std::pair<std::string,double> i, std::pair<std::string,double> j) ;
+
+  std::string get_next_state(map<int,vector < vector<int> > > predictions);
 
 };
 
