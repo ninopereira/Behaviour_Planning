@@ -8,6 +8,7 @@
 #include <iostream>     // std::cout
 #include <algorithm>    // std::find
 #include <vector>       // std::vector
+#include "cost_functions.hpp"
 
 // helper functions
 enum string_code {
@@ -29,7 +30,6 @@ string_code hashit (std::string const& inString) {
     if (inString == "PLCR") return PLCR;
     return CS;
 }
-
 
 /**
  * Initializes Vehicle
@@ -139,7 +139,7 @@ std::string Vehicle::get_next_state(map<int,vector < vector<int> > > predictions
     for (auto state:states)
 	{
 //      predictions_copy = deepcopy(predictions);
-//      trajectory = trajectory_for_state(state,predictions_copy);
+//      FullTrajectory = trajectory_for_state(state,predictions_copy);
 //      double cost = calculate_cost(trajectory, predictions);
       double cost = 0.5;
 	  costs.push_back({state, cost});
