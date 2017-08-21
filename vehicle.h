@@ -19,7 +19,8 @@ struct Snapshot {
    double a;
    std::string state;
    };
-using FullTrajectory = std::vector <Snapshot>;
+
+using Full_Trajectory = std::vector <Snapshot>;
 
 using Vehicle_ID = int;
 using Unique_ID = const int;
@@ -29,6 +30,9 @@ using Position = std::pair<Distance, Lane>;
 using Trajectory = std::vector <Position>;
 using Prediction = std::pair<Vehicle_ID,Trajectory>;
 using Predictions = std::map<Unique_ID,Prediction>; // using map as each vehicle has its own id
+
+using State = std::string;
+using Cost = double;
 
 struct TrajectoryData {
        int proposed_lane;
@@ -67,35 +71,33 @@ class Vehicle {
 public:
 
   struct collider{
-
     bool collision ; // is there a collision?
-    int  time; // time collision happens
-
+    double time; // time collision happens
   };
 
-  int L = 1;
+  int m_L = 1;// used to compare if vehicles in the same lane
 
-  int preferred_buffer = 6; // impacts "keep lane" behavior.
+  double m_preferred_buffer = 6; // impacts "keep lane" behavior.
 
-  int lane;
+  int m_lane;
 
-  int s;
+  double m_s;
 
-  int v;
+  double m_v;
 
-  int a;
+  double m_a;
 
-  int target_speed;
+  double m_target_speed;
 
-  int lanes_available;
+  int m_lanes_available;
 
-  int max_acceleration;
+  double m_max_acceleration;
 
-  int goal_lane;
+  int m_goal_lane;
 
-  int goal_s;
+  double m_goal_s;
 
-  string state;
+  string m_state;
 
   /**
   * Constructor
@@ -107,37 +109,44 @@ public:
   */
   virtual ~Vehicle();
 
-  void update_state(map<int, vector <vector<int> > > predictions);
+  void update_state(Predictions predictions);
 
-  void configure(vector<int> road_data);
+  void configure(vector<double> road_data);
 
-  string display();
+  std::string display() const;
 
-  void increment(int dt);
+  void increment(double dt);
 
   vector<int> state_at(int t);
 
-  bool collides_with(Vehicle other, int at_time);
+  bool collides_with(Vehicle other, double at_time);
 
-  collider will_collide_with(Vehicle other, int timesteps);
+  collider will_collide_with(Vehicle other, int num_timesteps);
 
-  void realize_state(map<int, vector < vector<int> > > predictions);
+  void realize_state(Predictions predictions);
 
   void realize_constant_speed();
 
-  int _max_accel_for_lane(map<int,vector<vector<int> > > predictions, int lane, int s);
+  double max_accel_for_lane(Predictions predictions, int lane, double s);
 
-  void realize_keep_lane(map<int, vector< vector<int> > > predictions);
+  void realize_keep_lane(Predictions predictions);
 
-  void realize_lane_change(map<int,vector< vector<int> > > predictions, string direction);
+  void realize_lane_change(Predictions predictions, std::string direction);
 
-  void realize_prep_lane_change(map<int,vector< vector<int> > > predictions, string direction);
+  void realize_prep_lane_change(Predictions predictions, std::string direction);
 
-  vector<vector<int> > generate_predictions(int horizon);
+  Trajectory generate_trajectory(int horizon = 10);
   
-  bool compare(std::pair<std::string,double> i, std::pair<std::string,double> j) ;
+  Position position_at(double time_t);
 
-  std::string get_next_state(map<int,vector < vector<int> > > predictions);
+  Full_Trajectory trajectory_for_state(State& state, Predictions predictions, int horizon=5);
+
+  Snapshot TakeSnapshot() const;
+  //bool compare(std::pair<std::string,double> i, std::pair<std::string,double> j) ;
+
+  void restore_state_from_snapshot(Snapshot snapshot);
+
+  std::string get_next_state(Predictions predictions);
 
 };
 

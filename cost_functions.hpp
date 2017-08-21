@@ -17,7 +17,7 @@
 //#define DEBUG = false;
 // DEBUG = True
 
-double change_lane_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions, TrajectoryData data)
+double change_lane_cost(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions, TrajectoryData data)
 {
         /*
         Penalizes lane changes AWAY from the goal lane and rewards
@@ -35,7 +35,7 @@ double change_lane_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions 
         return cost;
 }
 
-double distance_from_goal_lane(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions, TrajectoryData data)
+double distance_from_goal_lane(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions, TrajectoryData data)
 {
         double distance = abs(data.end_distance_to_goal);
         distance = max(distance,1.0);
@@ -46,17 +46,17 @@ double distance_from_goal_lane(Vehicle vehicle, FullTrajectory trajectory, Predi
         return cost;
 }
 
-double inefficiency_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions, TrajectoryData data)
+double inefficiency_cost(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions, TrajectoryData data)
 {
         double speed = data.avg_speed;
-        double target_speed = vehicle.target_speed;
+        double target_speed = vehicle.m_target_speed;
         double diff = target_speed - speed;
         double pct = float(diff) / target_speed;
         double multiplier = std::pow(pct,2.0);
         return multiplier * EFFICIENCY;
 }
 
-double collision_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions, TrajectoryData data)
+double collision_cost(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions, TrajectoryData data)
 {
     if (data.collides.first)
     {
@@ -68,7 +68,7 @@ double collision_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions pr
     return 0.0;
 }
 
-double buffer_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions, TrajectoryData data)
+double buffer_cost(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions, TrajectoryData data)
 {
     double closest = data.closest_approach;
     if (closest == 0)
@@ -86,9 +86,9 @@ double buffer_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions predi
     return multiplier * DANGER;
 }
 
-TrajectoryData get_helper_data(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions); // forward declaration
+TrajectoryData get_helper_data(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions); // forward declaration
 
-double calculate_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions, bool verbose=false)
+double calculate_cost(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions, bool verbose=false)
 {
     TrajectoryData trajectory_data = get_helper_data(vehicle, trajectory, predictions);
     double cost = 0.0;
@@ -104,15 +104,15 @@ double calculate_cost(Vehicle vehicle, FullTrajectory trajectory, Predictions pr
 bool check_collision(Snapshot snapshot, double s_previous, double s_now); // forward declaration
 Predictions filter_predictions_by_lane(Predictions predictions, Lane lane); // forward declaration
 
-TrajectoryData get_helper_data(Vehicle vehicle, FullTrajectory trajectory, Predictions predictions)
+TrajectoryData get_helper_data(Vehicle vehicle, Full_Trajectory trajectory, Predictions predictions)
 {
 
     Snapshot current_snapshot = trajectory[0];
     Snapshot first = trajectory[1];
     Snapshot last = trajectory.back();
 
-    double end_distance_to_goal = vehicle.goal_s - last.s;
-    int end_lanes_from_goal = abs(vehicle.goal_lane - last.lane);
+    double end_distance_to_goal = vehicle.m_goal_s - last.s;
+    int end_lanes_from_goal = abs(vehicle.m_goal_lane - last.lane);
     double dt = float(trajectory.size());
     int proposed_lane = first.lane;
     double avg_speed = (last.s - current_snapshot.s) / dt;
