@@ -77,7 +77,7 @@ public:
 
   int m_L = 1;// used to compare if vehicles in the same lane
 
-  double m_preferred_buffer = 6; // impacts "keep lane" behavior.
+  double m_preferred_buffer = 10; // was 6: impacts "keep lane" behavior.
 
   int m_lane;
 

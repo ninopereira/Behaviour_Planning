@@ -44,7 +44,7 @@ def main():
 			break
 		road.advance()
 		print (road)
-		time.sleep(float(1.0) / FRAMES_PER_SECOND)
+		time.sleep(float(0.1) / FRAMES_PER_SECOND)
 	ego = road.get_ego()
 	if ego.lane == GOAL[1]:
 		print ("You got to the goal in {} seconds!".format(timestep))

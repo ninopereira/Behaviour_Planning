@@ -140,6 +140,7 @@ State Vehicle::get_next_state(Predictions predictions)
     vector<std::pair<State,Cost>> costs;
     for (auto state:states)
 	{
+        std::cout << "state = " << state << ", m_lane = " << m_lane << std::endl;
       Full_Trajectory full_trajectory = trajectory_for_state(state, predictions);
       double cost = calculate_cost(*this, full_trajectory, predictions);
 	  costs.push_back({state, cost});
@@ -169,6 +170,7 @@ Full_Trajectory Vehicle::trajectory_for_state(State& state, Predictions predicti
         restore_state_from_snapshot(snapshot);
         m_state = state;
         realize_state(predictions_cpy);
+
         assert (0 <= m_lane);
         assert (m_lane < m_lanes_available);
         increment((double)i);
@@ -272,20 +274,20 @@ bool Vehicle::collides_with(Vehicle other, double time_t)
 // reviewed
 Vehicle::collider Vehicle::will_collide_with(Vehicle other, int num_timesteps)
 {
-	Vehicle::collider collider_temp;
-	collider_temp.collision = false;
-	collider_temp.time = -1; 
+    Vehicle::collider collider_temp;
+    collider_temp.collision = false;
+    collider_temp.time = -1;
 
     for (int t = 0; t < num_timesteps+1; t++)
-	{
+    {
         if( collides_with(other, (double)t) )
-      	{
-			collider_temp.collision = true;
+        {
+            collider_temp.collision = true;
             collider_temp.time = (double)t;
-        	return collider_temp;
-    	}
-	}
-	return collider_temp;
+            return collider_temp;
+        }
+    }
+    return collider_temp;
 }
 
 // reviewed
@@ -383,8 +385,8 @@ void Vehicle::realize_keep_lane(Predictions predictions) {
 
 // reviewed
 void Vehicle::realize_lane_change(Predictions predictions, std::string direction) {
-	int delta = -1;
-    if (direction.compare("L") == 0)
+    int delta = -1;
+    if (direction.compare("R") == 0)
     {
     	delta = 1;
     }

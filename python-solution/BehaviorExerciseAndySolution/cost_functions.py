@@ -129,7 +129,7 @@ def get_helper_data(vehicle,trajectory,predictions):
 
 		accels.append(a)
 		for v_id, v in filtered.items():
-			print(v)
+			#print(v)
 			state = v[i]
 			last_state = v[i-1]
 			vehicle_collides = check_collision(snapshot, last_state['s'], state['s'])

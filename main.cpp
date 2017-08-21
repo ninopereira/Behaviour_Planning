@@ -29,45 +29,46 @@ double AMOUNT_OF_ROAD_VISIBLE = 40;
 
 int main() {
  
-	Road road = Road(SPEED_LIMIT, TRAFFIC_DENSITY, LANE_SPEEDS);
+    Road road = Road(SPEED_LIMIT, TRAFFIC_DENSITY, LANE_SPEEDS);
 
     road.m_update_width = AMOUNT_OF_ROAD_VISIBLE;
 
-	road.populate_traffic();
+    road.populate_traffic();
 
     double goal_s = 300;
     int goal_lane = 0;
 
-	//configuration data: speed limit, num_lanes, goal_s, goal_lane, max_acceleration
+    //configuration data: speed limit, num_lanes, goal_s, goal_lane, max_acceleration
 
     int num_lanes = LANE_SPEEDS.size();
     vector<double> ego_config = {SPEED_LIMIT, (double) num_lanes, goal_s, (double)goal_lane, MAX_ACCEL};
 	 
     road.add_ego(2, 0, ego_config);
-	int timestep = 0;
+    int timestep = 0;
 	
-    while (road.get_ego().m_s <= GOAL[0]) {
-		timestep++;
-		if (timestep > 35) {
-			break;
-		}
-		road.advance();
-		road.display(timestep);
-		//time.sleep(float(1.0) / FRAMES_PER_SECOND);
-	}
-	Vehicle ego = road.get_ego();
+    while (road.get_ego().m_s <= GOAL[0])
+    {
+        timestep++;
+        if (timestep > 35) {
+                break;
+        }
+        road.advance();
+        road.display(timestep);
+        //time.sleep(float(1.0) / FRAMES_PER_SECOND);
+    }
+    Vehicle ego = road.get_ego();
     if (ego.m_lane == GOAL[1])
-	{
-		cout << "You got to the goal in " << timestep << " seconds!" << endl;
-		if(timestep > 35)
-	    {
-	        cout << "But it took too long to reach the goal. Go faster!" << endl;
-	    }
-	}
-	else
-	{
+    {
+        cout << "You got to the goal in " << timestep << " seconds!" << endl;
+        if(timestep > 35)
+        {
+            cout << "But it took too long to reach the goal. Go faster!" << endl;
+        }
+    }
+    else
+    {
         cout << "You missed the goal. You are in lane " << ego.m_lane << " instead of " << GOAL[1] << "." << endl;
-	}
+    }
 
-	return 0;
+    return 0;
 }
